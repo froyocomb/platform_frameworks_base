@@ -34544,7 +34544,7 @@ package java.lang {
     method protected final void setSigners(java.lang.Class<?>, java.lang.Object[]);
   }
 
-  public class ClassNotFoundException extends java.lang.ReflectiveOperationException {
+  public class ClassNotFoundException extends java.lang.Exception {
     ctor public ClassNotFoundException();
     ctor public ClassNotFoundException(java.lang.String);
     ctor public ClassNotFoundException(java.lang.String, java.lang.Throwable);
@@ -34686,7 +34686,7 @@ package java.lang {
     ctor public IllegalAccessError(java.lang.String);
   }
 
-  public class IllegalAccessException extends java.lang.ReflectiveOperationException {
+  public class IllegalAccessException extends java.lang.Exception {
     ctor public IllegalAccessException();
     ctor public IllegalAccessException(java.lang.String);
   }
@@ -34735,7 +34735,7 @@ package java.lang {
     ctor public InstantiationError(java.lang.String);
   }
 
-  public class InstantiationException extends java.lang.ReflectiveOperationException {
+  public class InstantiationException extends java.lang.Exception {
     ctor public InstantiationException();
     ctor public InstantiationException(java.lang.String);
   }
@@ -34912,7 +34912,7 @@ package java.lang {
     ctor public NoSuchFieldError(java.lang.String);
   }
 
-  public class NoSuchFieldException extends java.lang.ReflectiveOperationException {
+  public class NoSuchFieldException extends java.lang.Exception {
     ctor public NoSuchFieldException();
     ctor public NoSuchFieldException(java.lang.String);
   }
@@ -34922,7 +34922,7 @@ package java.lang {
     ctor public NoSuchMethodError(java.lang.String);
   }
 
-  public class NoSuchMethodException extends java.lang.ReflectiveOperationException {
+  public class NoSuchMethodException extends java.lang.Exception {
     ctor public NoSuchMethodException();
     ctor public NoSuchMethodException(java.lang.String);
   }
@@ -35790,7 +35790,7 @@ package java.lang.reflect {
     method public abstract java.lang.Object invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[]) throws java.lang.Throwable;
   }
 
-  public class InvocationTargetException extends java.lang.ReflectiveOperationException {
+  public class InvocationTargetException extends java.lang.Exception {
     ctor protected InvocationTargetException();
     ctor public InvocationTargetException(java.lang.Throwable);
     ctor public InvocationTargetException(java.lang.Throwable, java.lang.String);
@@ -37010,7 +37010,7 @@ package java.nio {
     method public java.nio.CharBuffer put(java.lang.String, int, int);
     method public int read(java.nio.CharBuffer) throws java.io.IOException;
     method public abstract java.nio.CharBuffer slice();
-    method public abstract java.nio.CharBuffer subSequence(int, int);
+    method public abstract java.lang.CharSequence subSequence(int, int);
     method public static java.nio.CharBuffer wrap(char[]);
     method public static java.nio.CharBuffer wrap(char[], int, int);
     method public static java.nio.CharBuffer wrap(java.lang.CharSequence);
