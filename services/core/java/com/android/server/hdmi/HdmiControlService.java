@@ -109,7 +109,7 @@ public final class HdmiControlService extends SystemService {
     private HdmiCecController mCecController;
 
     @Nullable
-    private HdmiMhlController mMhlController;
+    private HdmiMhlControllerStub mMhlController;
 
     // Whether ARC is "enabled" or not.
     // TODO: it may need to hold lock if it's accessed from others.
@@ -134,7 +134,7 @@ public final class HdmiControlService extends SystemService {
             Slog.i(TAG, "Device does not support HDMI-CEC.");
         }
 
-        mMhlController = HdmiMhlController.create(this);
+        mMhlController = HdmiMhlControllerStub.create(this);
         if (mMhlController == null) {
             Slog.i(TAG, "Device does not support MHL-control.");
         }
