@@ -40,7 +40,6 @@ int register_android_server_connectivity_Vpn(JNIEnv* env);
 int register_android_server_dreams_McuHal(JNIEnv* env);
 int register_android_server_hdmi_HdmiCecController(JNIEnv* env);
 int register_android_server_hdmi_HdmiCecService(JNIEnv* env);
-int register_android_server_hdmi_HdmiMhlController(JNIEnv* env);
 int register_android_server_tv_TvInputHal(JNIEnv* env);
 };
 
@@ -78,7 +77,6 @@ extern "C" jint JNI_OnLoad(JavaVM* vm, void* reserved)
     register_android_server_hdmi_HdmiCecController(env);
     // TODO: remove this once replaces HdmiCecService with HdmiControlService.
     register_android_server_hdmi_HdmiCecService(env);
-    register_android_server_hdmi_HdmiMhlController(env);
     register_android_server_tv_TvInputHal(env);
 
     return JNI_VERSION_1_4;
