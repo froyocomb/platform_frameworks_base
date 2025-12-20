@@ -115,7 +115,7 @@ public final class HdmiControlService extends SystemService {
     private HdmiCecController mCecController;
 
     @Nullable
-    private HdmiMhlController mMhlController;
+    private HdmiMhlControllerStub mMhlController;
 
     // HDMI port information. Stored in the unmodifiable list to keep the static information
     // from being modified.
@@ -138,7 +138,7 @@ public final class HdmiControlService extends SystemService {
             Slog.i(TAG, "Device does not support HDMI-CEC.");
         }
 
-        mMhlController = HdmiMhlController.create(this);
+        mMhlController = HdmiMhlControllerStub.create(this);
         if (mMhlController == null) {
             Slog.i(TAG, "Device does not support MHL-control.");
         }
