@@ -39,9 +39,6 @@ public final class HdmiControlService extends SystemService {
     @Nullable
     private HdmiCecController mCecController;
 
-    @Nullable
-    private HdmiMhlController mMhlController;
-
     public HdmiControlService(Context context) {
         super(context);
     }
@@ -52,11 +49,7 @@ public final class HdmiControlService extends SystemService {
         if (mCecController == null) {
             Slog.i(TAG, "Device does not support HDMI-CEC.");
         }
-
-        mMhlController = HdmiMhlController.create(this);
-        if (mMhlController == null) {
-            Slog.i(TAG, "Device does not support MHL-control.");
-        }
+        
     }
 
     /**
