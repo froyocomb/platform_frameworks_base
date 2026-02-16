@@ -49,7 +49,6 @@ public final class HdmiControlService extends SystemService {
         if (mCecController == null) {
             Slog.i(TAG, "Device does not support HDMI-CEC.");
         }
-        
     }
 
     /**
