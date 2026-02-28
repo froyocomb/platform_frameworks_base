@@ -111,8 +111,11 @@ static bool readPng(png_structp readPtr, png_infop infoPtr, PngInfo* outInfo,
     png_read_info(readPtr, infoPtr);
 
     int colorType, bitDepth, interlaceType, compressionType;
-    png_get_IHDR(readPtr, infoPtr, &outInfo->width, &outInfo->height, &bitDepth, &colorType,
-                 &interlaceType, &compressionType, nullptr);
+    png_uint_32 width, height;
+    png_get_IHDR(readPtr, infoPtr, &width, &height, &bitDepth, &colorType,
+                 &interlaceType, nullptr, nullptr);
+    outInfo->width = width;
+    outInfo->height = height;
 
     if (colorType == PNG_COLOR_TYPE_PALETTE) {
         png_set_palette_to_rgb(readPtr);
@@ -418,7 +421,7 @@ static bool writePng(png_structp writePtr, png_infop infoPtr, PngInfo* info,
         return false;
     }
 
-    uint32_t width, height;
+    png_uint_32 width, height;
     int colorType, bitDepth, interlaceType, compressionType;
 
     png_unknown_chunk unknowns[3];
