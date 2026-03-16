@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 package com.android.server.hdmi;
+import android.hardware.hdmi.HdmiPortInfo;
 import android.util.SparseArray;
+import com.android.server.hdmi.HdmiControlService.SendMessageCallback;
 /**
  * A handler class for MHL control command. It converts user's command into MHL command and pass it
  * to MHL HAL layer.
@@ -23,6 +25,7 @@ import android.util.SparseArray;
  */
 final class HdmiMhlControllerStub {
     private static final SparseArray<HdmiMhlLocalDeviceStub> mLocalDevices = new SparseArray<>();
+    private static final HdmiPortInfo[] EMPTY_PORT_INFO = new HdmiPortInfo[0];
     private static final int INVALID_MHL_VERSION = 0;
     private static final int NO_SUPPORTED_FEATURES = 0;
     private static final int INVALID_DEVICE_ROLES = 0;
@@ -35,6 +38,9 @@ final class HdmiMhlControllerStub {
     }
     static HdmiMhlControllerStub create(HdmiControlService service) {
         return new HdmiMhlControllerStub(service);
+    }
+    HdmiPortInfo[] getPortInfos() {
+        return EMPTY_PORT_INFO;
     }
     /**
      * Return {@link HdmiMhlLocalDeviceStub} matched with the given port id.
@@ -72,6 +78,10 @@ final class HdmiMhlControllerStub {
         return null;
     }
     void clearAllLocalDevices() {
+    }
+    void sendScratchpadCommand(int portId, int offset, int length, byte[] data) {
+    }
+    void setOption(int flag, int value) {
     }
     /**
      * Get the MHL version supported by underlying hardware port of the given {@code portId}.
