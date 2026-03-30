@@ -12,9 +12,6 @@ final class HdmiMhlLocalDeviceStub {
     }
     void onDeviceRemoved() {
     }
-    HdmiDeviceInfo getInfo() {
-        return INFO;
-    }
     void setBusMode(int cbusmode) {
     }
     void onBusOvercurrentDetected(boolean on) {
