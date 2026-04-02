@@ -231,7 +231,7 @@ public final class HdmiControlService extends SystemService {
     private HdmiCecController mCecController;
 
     @Nullable
-    private HdmiMhlController mMhlController;
+    private HdmiMhlControllerStub mMhlController;
 
     // HDMI port information. Stored in the unmodifiable list to keep the static information
     // from being modified.
@@ -313,7 +313,7 @@ public final class HdmiControlService extends SystemService {
             Slog.i(TAG, "Device does not support HDMI-CEC.");
         }
 
-        mMhlController = HdmiMhlController.create(this);
+        mMhlController = HdmiMhlControllerStub.create(this);
         if (mMhlController == null) {
             Slog.i(TAG, "Device does not support MHL-control.");
         }
@@ -661,18 +661,6 @@ public final class HdmiControlService extends SystemService {
         sendCecCommand(command, null);
     }
 
-    @ServiceThreadOnly
-    void sendMhlSubcommand(int portId, HdmiMhlSubcommand command) {
-        assertRunOnServiceThread();
-        sendMhlSubcommand(portId, command, null);
-    }
-
-    @ServiceThreadOnly
-    void sendMhlSubcommand(int portId, HdmiMhlSubcommand command, SendMessageCallback callback) {
-        assertRunOnServiceThread();
-        mMhlController.sendSubcommand(portId, command, callback);
-    }
-
     /**
      * Send <Feature Abort> command on the given CEC message if possible.
      * If the aborted message is invalid, then it wont send the message.
@@ -801,30 +789,17 @@ public final class HdmiControlService extends SystemService {
                 getVendorId(), displayName);
     }
 
-    @ServiceThreadOnly
-    boolean handleMhlSubcommand(int portId, HdmiMhlSubcommand message) {
-        assertRunOnServiceThread();
-
-        HdmiMhlLocalDevice device = mMhlController.getLocalDevice(portId);
-        if (device != null) {
-            return device.handleSubcommand(message);
-        }
-        Slog.w(TAG, "No mhl device exists[portId:" + portId + ", message:" + message);
-        return false;
-    }
-
-    @ServiceThreadOnly
     void handleMhlHotplugEvent(int portId, boolean connected) {
         assertRunOnServiceThread();
         if (connected) {
-            HdmiMhlLocalDevice newDevice = new HdmiMhlLocalDevice(this, portId);
-            HdmiMhlLocalDevice oldDevice = mMhlController.addLocalDevice(newDevice);
+            HdmiMhlLocalDeviceStub newDevice = new HdmiMhlLocalDeviceStub(this, portId);
+            HdmiMhlLocalDeviceStub oldDevice = mMhlController.addLocalDevice(newDevice);
             if (oldDevice != null) {
                 oldDevice.onDeviceRemoved();
                 Slog.i(TAG, "Old device of port " + portId + " is removed");
             }
         } else {
-            HdmiMhlLocalDevice device = mMhlController.removeLocalDevice(portId);
+            HdmiMhlLocalDeviceStub device = mMhlController.removeLocalDevice(portId);
             if (device != null) {
                 device.onDeviceRemoved();
                 // There is no explicit event for device removal unlike capability register event
@@ -841,7 +816,7 @@ public final class HdmiControlService extends SystemService {
     @ServiceThreadOnly
     void handleMhlCbusModeChanged(int portId, int cbusmode) {
         assertRunOnServiceThread();
-        HdmiMhlLocalDevice device = mMhlController.getLocalDevice(portId);
+        HdmiMhlLocalDeviceStub device = mMhlController.getLocalDevice(portId);
         if (device != null) {
             device.setCbusMode(cbusmode);
         } else {
@@ -853,7 +828,7 @@ public final class HdmiControlService extends SystemService {
     @ServiceThreadOnly
     void handleMhlVbusOvercurrent(int portId, boolean on) {
         assertRunOnServiceThread();
-        HdmiMhlLocalDevice device = mMhlController.getLocalDevice(portId);
+        HdmiMhlLocalDeviceStub device = mMhlController.getLocalDevice(portId);
         if (device != null) {
             device.onVbusOvercurrentDetected(on);
         } else {
@@ -864,7 +839,7 @@ public final class HdmiControlService extends SystemService {
     @ServiceThreadOnly
     void handleMhlCapabilityRegisterChanged(int portId, int adopterId, int deviceId) {
         assertRunOnServiceThread();
-        HdmiMhlLocalDevice device = mMhlController.getLocalDevice(portId);
+        HdmiMhlLocalDeviceStub device = mMhlController.getLocalDevice(portId);
 
         // Hotplug event should already have been called before capability register change event.
         if (device != null) {
@@ -881,9 +856,9 @@ public final class HdmiControlService extends SystemService {
     private void updateSafeMhlInput() {
         assertRunOnServiceThread();
         List<HdmiDeviceInfo> inputs = Collections.emptyList();
-        SparseArray<HdmiMhlLocalDevice> devices = mMhlController.getAllLocalDevices();
+        SparseArray<HdmiMhlLocalDeviceStub> devices = mMhlController.getAllLocalDevices();
         for (int i = 0; i < devices.size(); ++i) {
-            HdmiMhlLocalDevice device = devices.valueAt(i);
+            HdmiMhlLocalDeviceStub device = devices.valueAt(i);
             HdmiDeviceInfo info = device.getInfo();
             if (info != null) {
                 if (inputs.isEmpty()) {
@@ -1030,7 +1005,7 @@ public final class HdmiControlService extends SystemService {
                         return;
                     }
                     if (mMhlController != null) {
-                        HdmiMhlLocalDevice device = mMhlController.getLocalDeviceById(deviceId);
+                        HdmiMhlLocalDeviceStub device = mMhlController.getLocalDeviceById(deviceId);
                         if (device != null) {
                             if (device.getPortId() == tv.getActivePortId()) {
                                 invokeCallback(callback, HdmiControlManager.RESULT_SUCCESS);
@@ -1077,7 +1052,7 @@ public final class HdmiControlService extends SystemService {
                 @Override
                 public void run() {
                     if (mMhlController != null) {
-                        HdmiMhlLocalDevice device = mMhlController.getLocalDevice(mActivePortId);
+                        HdmiMhlLocalDeviceStub device = mMhlController.getLocalDevice(mActivePortId);
                         if (device != null) {
                             device.sendKeyEvent(keyCode, isPressed);
                             return;
@@ -1900,7 +1875,7 @@ public final class HdmiControlService extends SystemService {
         // the last port to go back to when RAP[ContentOff] is received. Note that the last port
         // may not be the MHL-enabled one. In this case the device info to be passed to
         // input change listener should be the one describing the corresponding HDMI port.
-        HdmiMhlLocalDevice device = mMhlController.getLocalDevice(portId);
+        HdmiMhlLocalDeviceStub device = mMhlController.getLocalDevice(portId);
         HdmiDeviceInfo info = (device != null && device.getInfo() != null)
                 ? device.getInfo()
                 : mPortDeviceMap.get(portId);
