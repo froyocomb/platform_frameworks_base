@@ -25,13 +25,13 @@ final class HdmiMhlLocalDeviceStub {
         return INFO;
     }
 
-    void setBusMode(int cbusmode) {
+    void setCbusMode(int cbusmode) {
     }
 
-    void onBusOvercurrentDetected(boolean on) {
+    void onVbusOvercurrentDetected(boolean on) {
     }
 
-    void setDeviceStatusChange(int adopterId, int deviceId) {
+    void setCapabilityRegisterChange(int adopterId, int deviceId) {
     }
 
     int getPortId() {
