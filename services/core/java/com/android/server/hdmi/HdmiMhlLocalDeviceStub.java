@@ -31,7 +31,7 @@ final class HdmiMhlLocalDeviceStub {
     void onVbusOvercurrentDetected(boolean on) {
     }
 
-    void setCapabilityRegisterChange(int adopterId, int deviceId) {
+    void setCapabilityRegister(int adopterId, int deviceId) {
     }
 
     int getPortId() {
