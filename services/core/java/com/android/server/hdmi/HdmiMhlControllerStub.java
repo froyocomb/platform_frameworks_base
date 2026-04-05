@@ -95,6 +95,9 @@ final class HdmiMhlControllerStub {
     void clearAllLocalDevices() {
     }
 
+    void sendScratchpadCommand(int portId, int offset, int length, byte [] data) {
+    }
+
     void sendVendorCommand(int portId, int offset, int length, byte[] data) {
     }
 
